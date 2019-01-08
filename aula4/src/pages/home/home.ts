@@ -28,12 +28,19 @@ export class HomePage {
   }
 
   public deletar(usuario){
-    this.usuarioService.removeUsuario(usuario);
+    this.usuarioService.removeUser(usuario);
   }
 
   public salvarUsuario() {
       this.usuarioService.creteUser(this.usuario);
   };
 
+  public editarUsuario(usuario){
+    this.usuario = usuario;
+  }
+
+  public removerUsuario(usuario){
+    this.usuarioService.removeUser(usuario);
+  }
 }
 

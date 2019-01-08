@@ -26,6 +26,18 @@ export class UserProvider {
     this.db.post(user);
   }
 
+  public updateUser(user: any) {
+    this.db.put(user).catch((err)=>{
+
+    });
+  }
+
+  public removeUser(user:any){
+    this.db.remove(user).catch((err)=>{
+
+    })
+  }
+
   public getUsers(){
     if(this.data){
       return Promise.resolve(this.data)
