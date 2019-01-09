@@ -10,10 +10,12 @@ export class UserProvider {
   public data : any;
   public db : any;
   public remote : any;
+  public remote2 : any;
 
   constructor() {
     this.db = new PouchDB('users');
     this.remote = 'http://127.0.0.1:5984/aula4'
+    this.remote2 = 'http://35.199.101.29:8888/aula4'
 
     let options = {
       live : true,
@@ -22,6 +24,7 @@ export class UserProvider {
     }
 
     this.db.sync(this.remote, options);
+    this.db.sync(this.remote2, options);
   }
 
 
