@@ -3,22 +3,31 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
   providers: [
-    Geolocation
+    Geolocation,
+    Camera
   ]
 })
 export class HomePage {
 
   public users: any;
   public usuario= new User();
+  public options: CameraOptions = {
+    quality: 80,
+    destinationType: this.camera.DestinationType.DATA_URL,
+    encodingType: this.camera.EncodingType.JPEG,
+    mediaType: this.camera.MediaType.PICTURE
+  }
 
   constructor(public navCtrl: NavController, 
     public usuarioService: UserProvider,
-    public geolocation: Geolocation) {
+    public geolocation: Geolocation,
+    private camera: Camera) {
 
   }
 
@@ -57,6 +66,19 @@ export class HomePage {
 
   public removerUsuario(usuario){
     this.usuarioService.removeUser(usuario);
+  }
+
+  public uploadImage(){
+    this.camera.getPicture(this.options).then((imageData) => {
+     // imageData is either a base64 encoded string or a file URI
+     // If it's base64 (DATA_URL):
+     let base64Image = 'data:image/jpeg;base64,' + imageData;
+     this.usuario.foto = base64Image;
+     console.log("Upload da imagem feito com sucesso!");
+    }, (err) => {
+     // Handle error
+     console.log(err);
+    });
   }
 }
 
