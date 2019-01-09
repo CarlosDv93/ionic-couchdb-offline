@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import PouchDB from 'pouchdb-browser'
+import PouchDB from 'pouchdb-browser';
+import PouchDBFind from 'pouchdb-find';
+
+PouchDB.plugin(PouchDBFind)
 
 @Injectable()
 export class UserProvider {
@@ -38,6 +41,13 @@ export class UserProvider {
     })
   }
 
+  public find(userName : string) {
+    return this.db.find({
+      selector: {'name': {$regex: userName}},
+      fields: ['name', 'age']
+    });
+  }
+
   public getUsers(){
     if(this.data){
       return Promise.resolve(this.data)
@@ -62,7 +72,28 @@ export class UserProvider {
   }
 
   public handleChange(change : any){
+    let changedDoc = null;
+    let changedIndex = null;
 
+    this.data.forEach((doc, index) => {
+      if (doc._id === change.id) {
+        changedDoc = doc;
+        changedIndex = index;
+      }
+    });
+
+    //Documento deletado
+    if (change.deleted) {
+      this.data.splice(changedIndex, 1);
+    } else {
+      if (changedDoc) {
+        //Documento atualizado
+        this.data[changedIndex] = change.doc;
+      } else {
+        //Documento adicionado
+        this.data.push(change.doc);
+      }
+    }
   }
 
 }
